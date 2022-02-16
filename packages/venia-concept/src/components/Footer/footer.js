@@ -7,7 +7,7 @@ import { shape, string } from 'prop-types';
 import { useFooter } from '@magento/peregrine/lib/talons/Footer/useFooter';
 import Logo from '@magento/venia-ui/lib/components/Logo';
 import Newsletter from '@magento/venia-ui/lib/components/Newsletter';
-import defaultClasses from '@magento/venia-ui/lib/components/Footer/footer.module.css';
+import defaultClasses from './footer.module.css';
 import resourceUrl from '@magento/peregrine/lib/util/makeUrl';
 import { useStyle } from '@magento/venia-ui/lib/classify';
 import {
@@ -59,7 +59,7 @@ const Footer = props => {
     return (
         <footer data-cy="Footer-root" className={classes.root}>
             <div className={classes.links}>
-                <div className={classes.link}>
+                <div className={classes.link, classes.customLink}>
                     <Link to="/foo">
                         <span className={classes.label}>Foo Demo Page</span>
                     </Link>
