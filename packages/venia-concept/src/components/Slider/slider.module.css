@@ -1,0 +1,13 @@
+.swiperWrapper {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+}
+
+.swiper {
+    min-height: 80vh;
+}
+
+.swiperSlide {
+    min-height: 80vh;
+}

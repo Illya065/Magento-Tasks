@@ -25,8 +25,8 @@ import mapConfigAggregator from './ContentTypes/Map/configAggregator';
 import bannerConfigAggregator from './ContentTypes/Banner/configAggregator';
 import { BannerShimmer } from './ContentTypes/Banner';
 import ButtonItem from './ContentTypes/ButtonItem';
-import sliderConfigAggregator from './ContentTypes/Slider/configAggregator';
-import { SliderShimmer } from './ContentTypes/Slider';
+import sliderConfigAggregator from '../../venia-concept/src/components/Slider/configAggregator';
+import { SliderShimmer } from '../../venia-concept/src/components/Slider';
 
 /* istanbul ignore next */
 const contentTypesConfig = {
@@ -105,7 +105,9 @@ const contentTypesConfig = {
     },
     slider: {
         configAggregator: sliderConfigAggregator,
-        component: React.lazy(() => import('./ContentTypes/Slider')),
+        component: React.lazy(() =>
+            import('../../venia-concept/src/components/Slider')
+        ),
         componentShimmer: SliderShimmer
     },
     // Slide is just a banner wrapped inside a slider
