@@ -1,6 +1,5 @@
 /* eslint-disable react/jsx-no-literals */
 import React, { Fragment } from 'react';
-import { Facebook, Instagram, Twitter } from 'react-feather';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { shape, string } from 'prop-types';
@@ -14,6 +13,14 @@ import {
     DEFAULT_LINKS,
     LOREM_IPSUM
 } from '@magento/venia-ui/lib/components/Footer/sampleData';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+    faBehance,
+    faFacebookF,
+    faGoogle,
+    faSkype,
+    faTwitter
+} from '@fortawesome/free-brands-svg-icons';
 
 const Footer = props => {
     const { links } = props;
@@ -59,7 +66,7 @@ const Footer = props => {
     return (
         <footer data-cy="Footer-root" className={classes.root}>
             <div className={classes.links}>
-                <div className={classes.link, classes.customLink}>
+                <div className={(classes.link, classes.customLink)}>
                     <Link to="/foo">
                         <span className={classes.label}>Foo Demo Page</span>
                     </Link>
@@ -86,13 +93,43 @@ const Footer = props => {
                     </p>
                     <ul className={classes.socialLinks}>
                         <li>
-                            <Instagram size={20} />
+                            <FontAwesomeIcon
+                                height={20}
+                                icon={faGoogle}
+                                width={20}
+                            />
                         </li>
+
                         <li>
-                            <Facebook size={20} />
+                            <FontAwesomeIcon
+                                height={20}
+                                icon={faBehance}
+                                width={20}
+                            />
                         </li>
+
                         <li>
-                            <Twitter size={20} />
+                            <FontAwesomeIcon
+                                height={20}
+                                icon={faFacebookF}
+                                width={20}
+                            />
+                        </li>
+
+                        <li>
+                            <FontAwesomeIcon
+                                height={20}
+                                icon={faSkype}
+                                width={20}
+                            />
+                        </li>
+
+                        <li>
+                            <FontAwesomeIcon
+                                height={20}
+                                icon={faTwitter}
+                                width={20}
+                            />
                         </li>
                     </ul>
                 </div>
