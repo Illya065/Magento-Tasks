@@ -4,6 +4,10 @@ export const GET_STORE_CONFIG_DATA = gql`
     query getStoreConfigData {
         # eslint-disable-next-line @graphql-eslint/require-id-when-available
         storeConfig {
+            header_logo_src
+            logo_alt
+            logo_height
+            logo_width
             store_code
             store_name
             store_group_name

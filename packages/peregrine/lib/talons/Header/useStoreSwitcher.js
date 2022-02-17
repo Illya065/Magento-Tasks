@@ -96,6 +96,24 @@ export const useStoreSwitcher = (props = {}) => {
         }
     }, [storeConfigData]);
 
+    const currentLogoSource = useMemo(() => {
+        if (storeConfigData) {
+            return storeConfigData.storeConfig.header_logo_src;
+        }
+    }, [storeConfigData]);
+
+    const currentLogoWidth = useMemo(() => {
+        if (storeConfigData) {
+            return storeConfigData.storeConfig.logo_width;
+        }
+    }, [storeConfigData]);
+
+    const currentLogoHeight = useMemo(() => {
+        if (storeConfigData) {
+            return storeConfigData.storeConfig.logo_height;
+        }
+    }, [storeConfigData]);
+
     const currentGroupName = useMemo(() => {
         if (storeConfigData) {
             return storeConfigData.storeConfig.store_group_name;
@@ -248,6 +266,9 @@ export const useStoreSwitcher = (props = {}) => {
         availableStores,
         currentGroupName,
         currentStoreName,
+        currentLogoWidth,
+        currentLogoHeight,
+        currentLogoSource,
         storeGroups,
         storeMenuRef,
         storeMenuTriggerRef,
