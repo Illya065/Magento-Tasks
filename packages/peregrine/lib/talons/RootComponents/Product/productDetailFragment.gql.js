@@ -10,6 +10,7 @@ export const ProductDetailsFragment = gql`
                 category_uid
             }
         }
+        product_brand
         description {
             html
         }
