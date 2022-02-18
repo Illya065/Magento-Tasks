@@ -19,10 +19,14 @@ import { ProductOptionsShimmer } from '@magento/venia-ui/lib/components/ProductO
 import CustomAttributes from '@magento/venia-ui/lib/components/ProductFullDetail/CustomAttributes';
 import defaultClasses from '@magento/venia-ui/lib/components/ProductFullDetail/productFullDetail.module.css';
 import { useStyle } from '@magento/venia-ui/lib/classify';
+import { useToasts } from '@magento/peregrine';
 
-const WishlistButton = React.lazy(() => import('@magento/venia-ui/lib/components/Wishlist/AddToListButton'));
-const Options = React.lazy(() => import('@magento/venia-ui/lib/components/ProductOptions'));
-
+const WishlistButton = React.lazy(() =>
+    import('@magento/venia-ui/lib/components/Wishlist/AddToListButton')
+);
+const Options = React.lazy(() =>
+    import('@magento/venia-ui/lib/components/ProductOptions')
+);
 // Correlate a GQL error message to a field. GQL could return a longer error
 // string but it may contain contextual info such as product id. We can use
 // parts of the string to check for which field to apply the error.
@@ -38,6 +42,10 @@ const ERROR_FIELD_TO_MESSAGE_MAPPING = {
 };
 
 const ProductFullDetail = props => {
+    const [, { addToast }] = useToasts();
+
+    
+
     const { product } = props;
 
     const talonProps = useProductFullDetail({ product });
@@ -56,9 +64,18 @@ const ProductFullDetail = props => {
         wishlistButtonProps
     } = talonProps;
     const { formatMessage } = useIntl();
-    console.log('prodDet', product);
 
     const classes = useStyle(defaultClasses, props.classes);
+
+    const handleButtonPress = formData => {
+        handleAddToCart(formData);
+        addToast({
+            message: formatMessage({ defaultMessage: 'You added product to your shopping cart', id: 'productFullDetail.success'}, { name: product.name }),
+            onDismiss: remove => remove(),
+            timeout: 5000,
+            type: 'success'
+        });
+    };
 
     const options = isProductConfigurable(product) ? (
         <Suspense fallback={<ProductOptionsShimmer />}>
@@ -171,7 +188,7 @@ const ProductFullDetail = props => {
             <Form
                 className={classes.root}
                 data-cy="ProductFullDetail-root"
-                onSubmit={handleAddToCart}
+                onSubmit={handleButtonPress}
             >
                 <section className={classes.title}>
                     <h1

@@ -16,7 +16,7 @@ import WishlistGalleryButton from '@magento/venia-ui/lib/components/Wishlist/Add
 
 
 import { useStyle } from '@magento/venia-ui/lib/classify';
-import AddToCartButton from '@magento/venia-ui/lib/components/Gallery/addToCartButton';
+import AddToCartButton from './addToCartButton';
 
 // The placeholder image is 4:5, so we should make sure to size our product
 // images appropriately.
@@ -53,7 +53,6 @@ const GalleryItem = props => {
         price_range,
         small_image,
         url_key,
-        rating_summary
     } = item;
 
     console.log('galery', props);
@@ -139,7 +138,7 @@ const GalleryItem = props => {
             </div>
 
             <div className={classes.actionsContainer}>
-                {' '}
+                {''}
                 {addButton}
                 {wishlistButton}
             </div>

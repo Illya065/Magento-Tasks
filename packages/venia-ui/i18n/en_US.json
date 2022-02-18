@@ -351,6 +351,7 @@
     "productForm.updatingCart": "Updating Cart...",
     "productFullDetail.addItemToCart": "Add to Cart",
     "productFullDetail.itemOutOfStock": "Out of Stock",
+    "productFullDetail.success": "You added {name} to your shopping cart",
     "productFullDetail.errorCart": "There was a problem with your cart. Please refresh the page and try adding the item once more.",
     "productFullDetail.errorToken": "There was a problem with your cart. Please sign in again and try adding the item once more.",
     "productFullDetail.errorUnknown": "Could not add item to cart. Please check required options and try again.",
