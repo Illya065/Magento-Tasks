@@ -44,8 +44,6 @@ const ERROR_FIELD_TO_MESSAGE_MAPPING = {
 const ProductFullDetail = props => {
     const [, { addToast }] = useToasts();
 
-    
-
     const { product } = props;
 
     const talonProps = useProductFullDetail({ product });
@@ -70,7 +68,13 @@ const ProductFullDetail = props => {
     const handleButtonPress = formData => {
         handleAddToCart(formData);
         addToast({
-            message: formatMessage({ defaultMessage: 'You added product to your shopping cart', id: 'productFullDetail.success'}, { name: product.name }),
+            message: formatMessage(
+                {
+                    defaultMessage: 'You added product to your shopping cart',
+                    id: 'productFullDetail.success'
+                },
+                { name: product.name }
+            ),
             onDismiss: remove => remove(),
             timeout: 5000,
             type: 'success'
@@ -218,15 +222,17 @@ const ProductFullDetail = props => {
                 />
                 <section className={classes.options}>{options}</section>
 
-                <section className={classes.brand}>
-                    <span>
-                        <FormattedMessage
-                            id={'global.brand'}
-                            defaultMessage={'Brand'}
-                        />
-                    </span>
-                    <span>{`: ${product.product_brand}`}</span>
-                </section>
+                {product.product_brand ? (
+                    <section className={classes.brand}>
+                        <span>
+                            <FormattedMessage
+                                id={'global.brand'}
+                                defaultMessage={'Brand'}
+                            />
+                        </span>
+                        <span>{`: ${product.product_brand}`}</span>
+                    </section>
+                ) : null}
 
                 <section className={classes.quantity}>
                     <span

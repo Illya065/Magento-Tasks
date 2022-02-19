@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-no-literals */
-import React from 'react';
+import React, { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Info } from 'react-feather';
 import { string, number, shape } from 'prop-types';
@@ -12,11 +12,16 @@ import resourceUrl from '@magento/peregrine/lib/util/makeUrl';
 import Image from '@magento/venia-ui/lib/components/Image';
 import { GalleryItemShimmer } from '@magento/venia-ui/lib/components/Gallery';
 import defaultClasses from '@magento/venia-ui/lib/components/Gallery/item.module.css';
+import customClasses from './item.module.css';
 import WishlistGalleryButton from '@magento/venia-ui/lib/components/Wishlist/AddToListButton';
-
 
 import { useStyle } from '@magento/venia-ui/lib/classify';
 import AddToCartButton from './addToCartButton';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye } from '@fortawesome/free-solid-svg-icons';
+import QuickView from '../QuickView';
+import mapProduct from '@magento/venia-ui/lib/util/mapProduct';
+import { useProduct } from '../RootComponents/Product/useProduct';
 
 // The placeholder image is 4:5, so we should make sure to size our product
 // images appropriately.
@@ -29,6 +34,7 @@ const IMAGE_WIDTHS = new Map()
     .set(UNCONSTRAINED_SIZE_KEY, 840);
 
 const GalleryItem = props => {
+    // CUSTOM HOOKS
     const {
         handleLinkClick,
         item,
@@ -36,29 +42,32 @@ const GalleryItem = props => {
         isSupportedProductType
     } = useGalleryItem(props);
 
+    const { product } = useProduct({
+        mapProduct,
+        url: item.url_key
+    });
+
+    // VARIABLES
     const { storeConfig } = props;
-
     const productUrlSuffix = storeConfig && storeConfig.product_url_suffix;
+    const classes = useStyle(defaultClasses, props.classes, customClasses);
+    const { name, product_brand, price_range, small_image, url_key } = item;
+    const { url: smallImageURL } = small_image;
+    const productLink = resourceUrl(`/${url_key}${productUrlSuffix || ''}`);
+    const ratingAverage = null;
 
-    const classes = useStyle(defaultClasses, props.classes);
+    // STATE HOOKS
+    const [dialog, setDialog] = useState(false);
 
+    // FUNCTIONS
+    const handleDialogModalVisibility = () => {
+        setDialog(!dialog);
+    };
+
+    // COMPONENTS
     if (!item) {
         return <GalleryItemShimmer classes={classes} />;
     }
-
-    // eslint-disable-next-line no-unused-vars
-    const {
-        name,
-        product_brand,
-        price_range,
-        small_image,
-        url_key,
-    } = item;
-
-    console.log('galery', props);
-
-    const { url: smallImageURL } = small_image;
-    const productLink = resourceUrl(`/${url_key}${productUrlSuffix || ''}`);
 
     const wishlistButton = wishlistButtonProps ? (
         <WishlistGalleryButton {...wishlistButtonProps} />
@@ -78,71 +87,82 @@ const GalleryItem = props => {
         </div>
     );
 
-    // Hide the Rating component until it is updated with the new look and feel (PWA-2512).
-    const ratingAverage = null;
-    // const ratingAverage = rating_summary ? (
-    //     <Rating rating={rating_summary} />
-    // ) : null;
+    const quickViewButton = product ? (
+        <button
+            className={classes.quickViewButton}
+            onClick={handleDialogModalVisibility}
+        >
+            <FontAwesomeIcon height={20} icon={faEye} width={20} />
+        </button>
+    ) : null;
 
     return (
-        <div
-            data-cy="GalleryItem-root"
-            className={classes.root}
-            aria-live="polite"
-            aria-busy="false"
-        >
-            <Link
-                onClick={handleLinkClick}
-                to={productLink}
-                className={classes.images}
+        <>
+            <div
+                data-cy="GalleryItem-root"
+                className={classes.root}
+                aria-live="polite"
+                aria-busy="false"
             >
-                <Image
-                    alt={name}
-                    classes={{
-                        image: classes.image,
-                        loaded: classes.imageLoaded,
-                        notLoaded: classes.imageNotLoaded,
-                        root: classes.imageContainer
-                    }}
-                    height={IMAGE_HEIGHT}
-                    resource={smallImageURL}
-                    widths={IMAGE_WIDTHS}
-                />
-                {ratingAverage}
-            </Link>
-            <Link
-                onClick={handleLinkClick}
-                to={productLink}
-                className={classes.name}
-                data-cy="GalleryItem-name"
-            >
-                <span>{name}</span>
-            </Link>
-            {product_brand ? (
-                <div className="brand">
-                    <FormattedMessage
-                        id={'glabal.brand'}
-                        defaultMessage={'Brand'}
+                {dialog ? (
+                    <QuickView
+                        product={product}
+                        closeModal={handleDialogModalVisibility}
                     />
-                    <span>{`: ${product_brand}`}</span>
+                ) : null}
+                <Link
+                    onClick={handleLinkClick}
+                    to={productLink}
+                    className={classes.images}
+                >
+                    <Image
+                        alt={name}
+                        classes={{
+                            image: classes.image,
+                            loaded: classes.imageLoaded,
+                            notLoaded: classes.imageNotLoaded,
+                            root: classes.imageContainer
+                        }}
+                        height={IMAGE_HEIGHT}
+                        resource={smallImageURL}
+                        widths={IMAGE_WIDTHS}
+                    />
+                    {ratingAverage}
+                </Link>
+                <Link
+                    onClick={handleLinkClick}
+                    to={productLink}
+                    className={classes.name}
+                    data-cy="GalleryItem-name"
+                >
+                    <span>{name}</span>
+                </Link>
+                {product_brand ? (
+                    <div className="brand">
+                        <FormattedMessage
+                            id={'glabal.brand'}
+                            defaultMessage={'Brand'}
+                        />
+                        <span>{`: ${product_brand}`}</span>
+                    </div>
+                ) : null}
+
+                <div data-cy="GalleryItem-price" className={classes.price}>
+                    <Price
+                        value={price_range.maximum_price.regular_price.value}
+                        currencyCode={
+                            price_range.maximum_price.regular_price.currency
+                        }
+                    />
                 </div>
-            ) : null}
 
-            <div data-cy="GalleryItem-price" className={classes.price}>
-                <Price
-                    value={price_range.maximum_price.regular_price.value}
-                    currencyCode={
-                        price_range.maximum_price.regular_price.currency
-                    }
-                />
+                <div className={classes.actionsContainer}>
+                    {addButton}
+                    {wishlistButton}
+                    {quickViewButton}
+                </div>
             </div>
-
-            <div className={classes.actionsContainer}>
-                {''}
-                {addButton}
-                {wishlistButton}
-            </div>
-        </div>
+        </>
     );
 };
 
