@@ -20,6 +20,11 @@ export const useAccountMenuItems = props => {
             id: 'accountMenu.orderHistoryLink',
             url: '/order-history'
         },
+        {
+            id: 'accountMenu.commentsPage',
+            name: 'Comments Page',
+            url: '/comments'
+        },
         // Hide links until features are completed
         // {
         //     name: 'Store Credit & Gift Cards',

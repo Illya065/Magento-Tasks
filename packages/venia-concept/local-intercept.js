@@ -17,6 +17,14 @@
  * or modify functionality from its dependencies.
  */
 
-function localIntercept() {}
-
-module.exports = localIntercept;
+module.exports = targets => {
+    targets.of('@magento/venia-ui').routes.tap(routes => {
+        routes.push({
+            exact: true,
+            name: 'Comments Page',
+            path: require.resolve('./src/components/CommentsPage'),
+            pattern: '/comments'
+        });
+        return routes;
+    });
+};
