@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-no-literals */
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Info } from 'react-feather';
 import { string, number, shape } from 'prop-types';
@@ -22,6 +22,7 @@ import { faEye } from '@fortawesome/free-solid-svg-icons';
 import QuickView from '../QuickView';
 import mapProduct from '@magento/venia-ui/lib/util/mapProduct';
 import { useProduct } from '../RootComponents/Product/useProduct';
+import { ContentViewContext } from '../Category/contentViewContext';
 
 // The placeholder image is 4:5, so we should make sure to size our product
 // images appropriately.
@@ -55,6 +56,7 @@ const GalleryItem = props => {
     const { url: smallImageURL } = small_image;
     const productLink = resourceUrl(`/${url_key}${productUrlSuffix || ''}`);
     const ratingAverage = null;
+    const view = useContext(ContentViewContext);
 
     // STATE HOOKS
     const [dialog, setDialog] = useState(false);
@@ -110,6 +112,7 @@ const GalleryItem = props => {
                         closeModal={handleDialogModalVisibility}
                     />
                 ) : null}
+
                 <Link
                     onClick={handleLinkClick}
                     to={productLink}
@@ -129,37 +132,41 @@ const GalleryItem = props => {
                     />
                     {ratingAverage}
                 </Link>
-                <Link
-                    onClick={handleLinkClick}
-                    to={productLink}
-                    className={classes.name}
-                    data-cy="GalleryItem-name"
-                >
-                    <span>{name}</span>
-                </Link>
-                {product_brand ? (
-                    <div className="brand">
-                        <FormattedMessage
-                            id={'glabal.brand'}
-                            defaultMessage={'Brand'}
+                <div className={view === 'list' ? classes.itemInfoList : ''}>
+                    <Link
+                        onClick={handleLinkClick}
+                        to={productLink}
+                        className={classes.name}
+                        data-cy="GalleryItem-name"
+                    >
+                        <span>{name}</span>
+                    </Link>
+                    {product_brand ? (
+                        <div className="brand">
+                            <FormattedMessage
+                                id={'glabal.brand'}
+                                defaultMessage={'Brand'}
+                            />
+                            <span>{`: ${product_brand}`}</span>
+                        </div>
+                    ) : null}
+
+                    <div data-cy="GalleryItem-price" className={classes.price}>
+                        <Price
+                            value={
+                                price_range.maximum_price.regular_price.value
+                            }
+                            currencyCode={
+                                price_range.maximum_price.regular_price.currency
+                            }
                         />
-                        <span>{`: ${product_brand}`}</span>
                     </div>
-                ) : null}
 
-                <div data-cy="GalleryItem-price" className={classes.price}>
-                    <Price
-                        value={price_range.maximum_price.regular_price.value}
-                        currencyCode={
-                            price_range.maximum_price.regular_price.currency
-                        }
-                    />
-                </div>
-
-                <div className={classes.actionsContainer}>
-                    {addButton}
-                    {wishlistButton}
-                    {quickViewButton}
+                    <div className={classes.actionsContainer}>
+                        {addButton}
+                        {wishlistButton}
+                        {quickViewButton}
+                    </div>
                 </div>
             </div>
         </>

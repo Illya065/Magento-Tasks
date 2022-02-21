@@ -1,4 +1,14 @@
-import React, { Fragment, Suspense, useMemo, useRef } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+import React, {
+    Fragment,
+    Suspense,
+    // useEffect,
+    useMemo,
+    useRef,
+    useState
+} from 'react';
 import { FormattedMessage } from 'react-intl';
 import { array, number, shape, string } from 'prop-types';
 
@@ -23,8 +33,11 @@ import SortedByContainer, {
     SortedByContainerShimmer
 } from '@magento/venia-ui/lib/components/SortedByContainer';
 import defaultClasses from '@magento/venia-ui/lib/RootComponents/Category/category.module.css';
+import customClasses from './categoryContent.module.css';
 import NoProductsFound from '@magento/venia-ui/lib/RootComponents/Category/NoProductsFound';
 import { useStyle } from '@magento/venia-ui/lib/classify';
+// import { useHistory, useLocation } from 'react-router-dom';
+import { ContentViewProvider } from './contentViewContext';
 
 const FilterModal = React.lazy(() =>
     import('@magento/venia-ui/lib/components/FilterModal')
@@ -61,10 +74,27 @@ const CategoryContent = props => {
     } = talonProps;
 
     const sidebarRef = useRef(null);
-    const classes = useStyle(defaultClasses, props.classes);
+    const classes = useStyle(defaultClasses, props.classes, customClasses);
     const shouldRenderSidebarContent = useIsInViewport({
         elementRef: sidebarRef
     });
+    // const location = useLocation();
+    // const history = useHistory();
+    // const urlParams = new URLSearchParams(location.search);
+
+    // console.log('loc', location);
+    // console.log('history', history);
+    // console.log('urlParams', urlParams.get('view'));
+
+    const [view, setView] = useState(localStorage.getItem('view') || 'list');
+
+    // useEffect(() => {
+    //     if (view === 'list') {
+    //         history.replace(`${history.location.pathname}${history.location.search}&view=list`);
+    //     } else {
+    //         history.replace(`${history.location.pathname}${history.location.search}&view=grid`);
+    //     }
+    // }, [view]);
 
     const shouldShowFilterButtons = filters && filters.length;
     const shouldShowFilterShimmer = filters === null;
@@ -121,13 +151,25 @@ const CategoryContent = props => {
         <RichContent html={categoryDescription} />
     ) : null;
 
+    const contentViewChangeHandler = (e, view) => {
+        e.preventDefault();
+
+        if (view === 'list') {
+            localStorage.setItem('view', 'list');
+            setView('list');
+        } else {
+            localStorage.setItem('view', 'grid');
+            setView('grid');
+        }
+    };
+
     const content = useMemo(() => {
         if (!totalPagesFromData && !isLoading) {
             return <NoProductsFound categoryId={categoryId} />;
         }
 
         const gallery = totalPagesFromData ? (
-            <Gallery items={items} />
+            <Gallery items={items} view={view} />
         ) : (
             <GalleryShimmer items={items} />
         );
@@ -138,8 +180,34 @@ const CategoryContent = props => {
 
         return (
             <Fragment>
-                <section className={classes.gallery}>{gallery}</section>
-                <div className={classes.pagination}>{pagination}</div>
+                <ContentViewProvider value={view}>
+                    <div className={classes.contentViewToggler}>
+                        <button
+                            disabled={view === 'list' && 'disabled'}
+                            className={[
+                                classes.contentViewButton,
+                                view === 'list' &&
+                                    classes.contentViewButtonActive
+                            ].join(' ')}
+                            onClick={e => contentViewChangeHandler(e, 'list')}
+                        >
+                            <img src="../../../assets/ListIcon.png" alt="" />
+                        </button>
+                        <button
+                            disabled={view === 'grid' && 'disabled'}
+                            className={[
+                                classes.contentViewButton,
+                                view === 'grid' &&
+                                    classes.contentViewButtonActive
+                            ].join(' ')}
+                            onClick={e => contentViewChangeHandler(e, 'grid')}
+                        >
+                            <img src="../../../assets/MenuIcon.png" alt="" />
+                        </button>
+                    </div>
+                    <section className={classes.gallery}>{gallery}</section>
+                    <div className={classes.pagination}>{pagination}</div>
+                </ContentViewProvider>
             </Fragment>
         );
     }, [
@@ -149,7 +217,8 @@ const CategoryContent = props => {
         isLoading,
         items,
         pageControl,
-        totalPagesFromData
+        totalPagesFromData,
+        view
     ]);
 
     const categoryTitle = categoryName ? categoryName : <Shimmer width={5} />;

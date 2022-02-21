@@ -1,9 +1,11 @@
-import React, { useMemo } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useMemo, useRef } from 'react';
 import { string, shape, array } from 'prop-types';
 
 import GalleryItem from './item';
 import { GalleryItemShimmer } from '@magento/venia-ui/lib/components/Gallery';
 import defaultClasses from '@magento/venia-ui/lib/components/Gallery/gallery.module.css';
+import customClasses from './gallery.module.css';
 import { useGallery } from '@magento/peregrine/lib/talons/Gallery/useGallery';
 import { useStyle } from '@magento/venia-ui/lib/classify';
 
@@ -14,10 +16,20 @@ import { useStyle } from '@magento/venia-ui/lib/classify';
  * @params {Array} props.items an array of items to render
  */
 const Gallery = props => {
-    const { items } = props;
-    const classes = useStyle(defaultClasses, props.classes);
+    const { items, view } = props;
+    const classes = useStyle(defaultClasses, props.classes, customClasses);
     const talonProps = useGallery();
     const { storeConfig } = talonProps;
+
+    const contentRef = useRef(null);
+
+    useEffect(() => {
+        if (view === 'list') {
+            contentRef.current.classList.add(classes.list);
+        } else {
+            contentRef.current.classList.remove(classes.list);
+        }
+    }, [view]);
 
     const galleryItems = useMemo(
         () =>
@@ -26,11 +38,13 @@ const Gallery = props => {
                     return <GalleryItemShimmer key={index} />;
                 }
                 return (
-                    <GalleryItem
-                        key={item.id}
-                        item={item}
-                        storeConfig={storeConfig}
-                    />
+                    <div>
+                        <GalleryItem
+                            key={item.id}
+                            item={item}
+                            storeConfig={storeConfig}
+                        />
+                    </div>
                 );
             }),
         [items, storeConfig]
@@ -43,7 +57,9 @@ const Gallery = props => {
             aria-live="polite"
             aria-busy="false"
         >
-            <div className={classes.items}>{galleryItems}</div>
+            <div ref={contentRef} className={classes.items}>
+                {galleryItems}
+            </div>
         </div>
     );
 };
@@ -55,7 +71,8 @@ Gallery.propTypes = {
         pagination: string,
         root: string
     }),
-    items: array.isRequired
+    items: array.isRequired,
+    view: string
 };
 
 export default Gallery;
