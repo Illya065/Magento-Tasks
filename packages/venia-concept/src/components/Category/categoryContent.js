@@ -4,6 +4,7 @@
 import React, {
     Fragment,
     Suspense,
+    useEffect,
     // useEffect,
     useMemo,
     useRef,
@@ -38,6 +39,7 @@ import NoProductsFound from '@magento/venia-ui/lib/RootComponents/Category/NoPro
 import { useStyle } from '@magento/venia-ui/lib/classify';
 // import { useHistory, useLocation } from 'react-router-dom';
 import { ContentViewProvider } from './contentViewContext';
+import { useHistory, useLocation } from 'react-router-dom';
 
 const FilterModal = React.lazy(() =>
     import('@magento/venia-ui/lib/components/FilterModal')
@@ -78,23 +80,24 @@ const CategoryContent = props => {
     const shouldRenderSidebarContent = useIsInViewport({
         elementRef: sidebarRef
     });
-    // const location = useLocation();
-    // const history = useHistory();
-    // const urlParams = new URLSearchParams(location.search);
-
-    // console.log('loc', location);
-    // console.log('history', history);
-    // console.log('urlParams', urlParams.get('view'));
 
     const [view, setView] = useState(localStorage.getItem('view') || 'list');
 
-    // useEffect(() => {
-    //     if (view === 'list') {
-    //         history.replace(`${history.location.pathname}${history.location.search}&view=list`);
-    //     } else {
-    //         history.replace(`${history.location.pathname}${history.location.search}&view=grid`);
-    //     }
-    // }, [view]);
+    const location = useLocation();
+    const history = useHistory();
+
+    useEffect(() => {
+        const urlParams = new URLSearchParams(location.search);
+        if (view === 'list' && !urlParams.get('view')) {
+            urlParams.set('view', 'list');
+            location.search = urlParams.toString();
+        }
+
+        if (view === 'grid' && urlParams.get('view')) {
+            urlParams.delete('view');
+            history.push(urlParams);
+        }
+    }, [view]);
 
     const shouldShowFilterButtons = filters && filters.length;
     const shouldShowFilterShimmer = filters === null;
