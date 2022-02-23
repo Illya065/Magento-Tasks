@@ -30,7 +30,7 @@ const Header = props => {
         threshold: 0
     };
 
-    const callback = function(entries, observer) {
+    const callback = function(entries) {
         if (entries[0].isIntersecting) {
             headerRef.current.style.position = 'relative';
             headerRef.current.style.backgroundColor = 'rgb(255,255,255)';
@@ -38,11 +38,9 @@ const Header = props => {
             headerRef.current.style.position = 'sticky';
             headerRef.current.style.backgroundColor = 'rgba(255,255,255, 0.95)';
         }
-        /* Content excerpted, show below */
-        console.log('inter', entries[0]);
     };
 
-    var observer = new IntersectionObserver(callback, options);
+    const observer = new IntersectionObserver(callback, options);
 
     useEffect(() => {
         observer.observe(document.querySelector('.my-header'));

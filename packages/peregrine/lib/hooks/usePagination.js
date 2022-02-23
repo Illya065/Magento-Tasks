@@ -1,26 +1,27 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useCallback, useMemo, useState, useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
-import { getSearchParam } from './useSearchParam';
+// import { getSearchParam } from './useSearchParam';
 
 /**
  * Sets a query parameter in history.
  *
  * @private
  */
-const setQueryParam = ({ history, location, parameter, replace, value }) => {
-    const { search } = location;
-    const queryParams = new URLSearchParams(search);
+// const setQueryParam = ({ history, location, parameter, replace, value }) => {
+//     const { search } = location;
+//     const queryParams = new URLSearchParams(search);
 
-    queryParams.set(parameter, value);
-    const destination = { search: queryParams.toString() };
+//     queryParams.set(parameter, value);
+//     const destination = { search: queryParams.toString() };
 
-    if (replace) {
-        history.replace(destination);
-    } else {
-        history.push(destination);
-    }
-};
+//     if (replace) {
+//         history.replace(destination);
+//     } else {
+//         history.push(destination);
+//     }
+// };
 
 const defaultInitialPage = 1;
 
@@ -51,19 +52,21 @@ export const usePagination = (props = {}) => {
 
     const searchParam = namespace ? `${namespace}_${parameter}` : parameter;
     const initialPage = props.initialPage || defaultInitialPage;
-    const currentPage = parseInt(getSearchParam(searchParam, location));
+    // const currentPage = parseInt(getSearchParam(searchParam, location));
+    const [currentPage, setLocalCurrentPage] = useState(1);
 
     // use the location to hold state
     const setCurrentPage = useCallback(
-        (page, replace = false) => {
-            // Update the query parameter.
-            setQueryParam({
-                history,
-                location,
-                parameter: searchParam,
-                replace,
-                value: page
-            });
+        (page) => {
+            // // Update the query parameter.
+            // setQueryParam({
+            //     history,
+            //     location,
+            //     parameter: searchParam,
+            //     replace,
+            //     value: page
+            // });
+            setLocalCurrentPage(page);
         },
         [history, location, searchParam]
     );
@@ -73,6 +76,7 @@ export const usePagination = (props = {}) => {
         if (!currentPage) {
             setCurrentPage(initialPage, true);
         }
+        console.log('setCP', currentPage, initialPage);
     }, [currentPage, initialPage, setCurrentPage]);
 
     /**

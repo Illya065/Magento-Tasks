@@ -26,6 +26,8 @@ const Logo = props => {
         currentLogoHeight = 46
     } = useStoreSwitcher();
 
+    console.log('logo', currentLogoSource);
+
     return (
         <Image
             alt={title}

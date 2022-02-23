@@ -22,9 +22,8 @@ import FilterModalOpenButton, {
 } from '@magento/venia-ui/lib/components/FilterModalOpenButton';
 import { FilterSidebarShimmer } from '@magento/venia-ui/lib/components/FilterSidebar';
 import Gallery from '../Gallery';
-import { GalleryShimmer } from '@magento/venia-ui/lib/components/Gallery';
 import { StoreTitle } from '@magento/venia-ui/lib/components/Head';
-import Pagination from '@magento/venia-ui/lib/components/Pagination';
+import Pagination from '../Pagination';
 import ProductSort, {
     ProductSortShimmer
 } from '@magento/venia-ui/lib/components/ProductSort';
@@ -59,6 +58,10 @@ const CategoryContent = props => {
     } = props;
     const [currentSort] = sortProps;
 
+    const [infiniteItems, setInfiniteItems] = useState({});
+
+    const { currentPage, setPage } = pageControl;
+
     const talonProps = useCategoryContent({
         categoryId,
         data,
@@ -81,8 +84,8 @@ const CategoryContent = props => {
         elementRef: sidebarRef
     });
 
+    // set content view url query
     const [view, setView] = useState(localStorage.getItem('view') || 'list');
-
     const location = useLocation();
     const history = useHistory();
 
@@ -91,13 +94,39 @@ const CategoryContent = props => {
         if (view === 'list' && !urlParams.get('view')) {
             urlParams.set('view', 'list');
             location.search = urlParams.toString();
+            history.push(`${location.pathname}?${location.search}`);
         }
 
         if (view === 'grid' && urlParams.get('view')) {
             urlParams.delete('view');
             history.push(urlParams);
         }
-    }, [view]);
+    }, [view, location.pathname]);
+
+    // infinite scroll
+    useEffect(() => {
+        window.scrollTo(0, 0);
+        setInfiniteItems({});
+        setPage(1);
+    }, []);
+
+    useEffect(() => {
+        const copy = JSON.parse(JSON.stringify(infiniteItems));
+        copy[currentPage.toString()] = items;
+        setInfiniteItems(copy);
+    }, [items, pageControl, currentPage]);
+
+    useEffect(() => {
+        // const urlParams = new URLSearchParams(location.search);
+
+        // urlParams.delete('page');
+        // history.push(urlParams);
+    }, [currentPage]);
+
+    const infiniteScrollModified = Object.values(infiniteItems)
+        .flat(1)
+        .filter(i => i);
+    console.log('infiniteItems', infiniteScrollModified, items);
 
     const shouldShowFilterButtons = filters && filters.length;
     const shouldShowFilterShimmer = filters === null;
@@ -171,11 +200,10 @@ const CategoryContent = props => {
             return <NoProductsFound categoryId={categoryId} />;
         }
 
-        const gallery = totalPagesFromData ? (
-            <Gallery items={items} view={view} />
-        ) : (
-            <GalleryShimmer items={items} />
-        );
+        const gallery =
+            totalPagesFromData && infiniteScrollModified[0] !== null ? (
+                <Gallery items={infiniteScrollModified} view={view} />
+            ) : null;
 
         const pagination = totalPagesFromData ? (
             <Pagination pageControl={pageControl} />
