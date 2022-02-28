@@ -36,16 +36,13 @@ import defaultClasses from '@magento/venia-ui/lib/RootComponents/Category/catego
 import customClasses from './categoryContent.module.css';
 import NoProductsFound from '@magento/venia-ui/lib/RootComponents/Category/NoProductsFound';
 import { useStyle } from '@magento/venia-ui/lib/classify';
-// import { useHistory, useLocation } from 'react-router-dom';
 import { ContentViewProvider } from './contentViewContext';
 import { useHistory, useLocation } from 'react-router-dom';
 
 const FilterModal = React.lazy(() =>
     import('@magento/venia-ui/lib/components/FilterModal')
 );
-const FilterSidebar = React.lazy(() =>
-    import('@magento/venia-ui/lib/components/FilterSidebar')
-);
+const FilterSidebar = React.lazy(() => import('../FilterSidebar'));
 
 const CategoryContent = props => {
     const {
@@ -118,7 +115,6 @@ const CategoryContent = props => {
 
     useEffect(() => {
         // const urlParams = new URLSearchParams(location.search);
-
         // urlParams.delete('page');
         // history.push(urlParams);
     }, [currentPage]);

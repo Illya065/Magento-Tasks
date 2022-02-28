@@ -1,0 +1,16 @@
+.inputsWrapper {
+    display: flex;
+    margin-bottom: 1rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.priceValueInput {
+    width: 4rem;
+    font-size: 1.1rem;
+    text-align: center;
+    padding: 0.1rem 0rem;
+    border: 2px solid #000;
+    border-radius: 10px;
+    margin: 0rem 1rem;
+}
