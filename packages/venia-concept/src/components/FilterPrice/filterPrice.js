@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from 'react';
 import { Range } from 'rc-slider';
+import { array, func, shape, string } from 'prop-types';
 import defaultClasses from './filterPrice.module.css';
 import 'rc-slider/assets/index.css';
 import './rc-slider.css';
-import { array, func, shape, string } from 'prop-types';
 
 const FilterPrice = props => {
     // VARIABLES (props)

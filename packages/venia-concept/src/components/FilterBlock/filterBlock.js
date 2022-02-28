@@ -11,7 +11,7 @@ import Icon from '@magento/venia-ui/lib/components/Icon';
 import FilterList from '@magento/venia-ui/lib/components/FilterModal/FilterList';
 import defaultClasses from '@magento/venia-ui/lib/components/FilterModal/filterBlock.module.css';
 import { useStyle } from '@magento/venia-ui/lib/classify';
-import FilterPrice from '../FilterList/filterPrice';
+import FilterPrice from '../FilterPrice/filterPrice';
 
 const FilterBlock = props => {
     const {
