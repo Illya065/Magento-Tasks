@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { func, shape, string } from 'prop-types';
 import { useIntl } from 'react-intl';
 
-import CurrentFilter from '@magento/venia-ui/lib/components/FilterModal/CurrentFilters/currentFilter';
+import CurrentFilter from './currentFilter';
 import defaultClasses from '@magento/venia-ui/lib/components/FilterModal/CurrentFilters/currentFilters.module.css';
 import { useStyle } from '@magento/venia-ui/lib/classify';
 

@@ -39,9 +39,7 @@ import { useStyle } from '@magento/venia-ui/lib/classify';
 import { ContentViewProvider } from './contentViewContext';
 import { useHistory, useLocation } from 'react-router-dom';
 
-const FilterModal = React.lazy(() =>
-    import('@magento/venia-ui/lib/components/FilterModal')
-);
+const FilterModal = React.lazy(() => import('../FilterModal'));
 const FilterSidebar = React.lazy(() => import('../FilterSidebar'));
 
 const CategoryContent = props => {

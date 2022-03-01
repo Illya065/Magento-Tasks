@@ -1,0 +1,11 @@
+.filterColorItem {
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    margin-right: 1rem;
+    border: 3px solid white;
+}
+
+.filterColorItemSelected {
+    border: 3px solid #888;
+}

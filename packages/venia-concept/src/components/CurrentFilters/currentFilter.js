@@ -30,6 +30,9 @@ const CurrentFilter = props => {
         }
     );
 
+    const title =
+        group === 'fashion_color' ? item.title.split('_')[1] : item.title;
+
     return (
         <span className={classes.root} data-cy="CurrentFilter-root">
             <Trigger
@@ -39,7 +42,7 @@ const CurrentFilter = props => {
             >
                 <Icon size={20} src={Remove} />
             </Trigger>
-            <span className={classes.text}>{item.title}</span>
+            <span className={classes.text}>{title}</span>
         </span>
     );
 };

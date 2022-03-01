@@ -11,7 +11,8 @@ import Icon from '@magento/venia-ui/lib/components/Icon';
 import FilterList from '@magento/venia-ui/lib/components/FilterModal/FilterList';
 import defaultClasses from '@magento/venia-ui/lib/components/FilterModal/filterBlock.module.css';
 import { useStyle } from '@magento/venia-ui/lib/classify';
-import FilterPrice from '../FilterPrice/filterPrice';
+import FilterPrice from '../FilterPrice';
+import FilterColor from '../FilterColor';
 
 const FilterBlock = props => {
     const {
@@ -71,6 +72,14 @@ const FilterBlock = props => {
                 group={group}
                 items={items}
                 onApply={onApply}
+            />
+        ) : name === 'Fashion Color' ? (
+            <FilterColor
+                filterApi={filterApi}
+                group={group}
+                items={items}
+                onApply={onApply}
+                filterState={filterState}
             />
         ) : (
             <FilterList

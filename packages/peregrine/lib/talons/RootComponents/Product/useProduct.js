@@ -55,7 +55,7 @@ export const useProduct = props => {
 
     const isBackgroundLoading = !!data && loading;
 
-    const product = useMemo(() => {
+    const productData = useMemo(() => {
         if (!data) {
             // The product isn't in the cache and we don't have a response from GraphQL yet.
             return null;
@@ -75,6 +75,33 @@ export const useProduct = props => {
 
         return mapProduct(product);
     }, [data, mapProduct, urlKey]);
+
+    const configurableOptions = productData.configurable_options.map(item => {
+        if (item.attribute_id === '138') {
+            const newValue = item.values.map(valueItem => {
+                const isNotModified = valueItem.label.split('').includes('_');
+                const labelName = isNotModified
+                    ? valueItem.label.split('_')[1]
+                    : valueItem.label;
+                return {
+                    ...valueItem,
+                    default_label: labelName,
+                    label: labelName,
+                    store_label: labelName
+                };
+            });
+
+            return {
+                ...item,
+                values: newValue
+            };
+        } else {
+            return item;
+        }
+    });
+
+    const product = JSON.parse(JSON.stringify(productData));
+    product.configurable_options = configurableOptions;
 
     // Update the page indicator if the GraphQL query is in flight.
     useEffect(() => {

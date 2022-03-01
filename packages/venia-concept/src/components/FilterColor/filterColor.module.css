@@ -1,0 +1,21 @@
+.filterColorList {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.2rem;
+    width: 17.5rem;
+    overflow: scroll;
+    overflow-y: hidden;
+    padding: 0rem 0rem 0.5rem;
+}
+
+.filterColorList::-webkit-scrollbar {
+    height: 5px;
+}
+
+.filterColorList::-webkit-scrollbar-track {
+    background-color: lightgrey;
+}
+
+.filterColorList::-webkit-scrollbar-thumb {
+    background: #888;
+}
