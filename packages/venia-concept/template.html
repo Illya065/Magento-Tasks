@@ -15,7 +15,7 @@
             type="image/x-icon"
             href="https://magento-template/media/favicon/stores/1/favicon.ico"
         />
-        
+
         <!--
             Apple Specific Tags
 
@@ -38,7 +38,6 @@
             href="/venia-static/icons/apple-touch-icon.png"
         />
         <link rel="preconnect" href="<%= process.env.MAGENTO_BACKEND_URL %>" />
-        
 
         <!--
             This following CSS is a copy of the css returned by Google's font API that
@@ -258,6 +257,11 @@
                 );
             } catch (error) {}
         </script>
+        <script
+            async
+            defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQkHu7NnVIC39a283B5plV5latQAwyOKg&callback=initMap"
+        ></script>
 
         {{#webpackChunks}}
         <script type="text/javascript" src="/{{.}}"></script>

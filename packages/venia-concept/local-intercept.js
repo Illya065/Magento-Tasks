@@ -25,6 +25,16 @@ module.exports = targets => {
             path: require.resolve('./src/components/CommentsPage'),
             pattern: '/comments'
         });
+
+        // routes.push({
+        //     exact: true,
+        //     name: 'Map Page',
+        //     path: require.resolve('./src/components/MapPage'),
+        //     pattern: '/map'
+        // });
+
         return routes;
     });
+
+    
 };
