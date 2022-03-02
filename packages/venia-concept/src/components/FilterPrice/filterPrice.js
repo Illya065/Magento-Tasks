@@ -2,26 +2,30 @@
 import React, { useState } from 'react';
 import { Range } from 'rc-slider';
 import { array, func, shape, string } from 'prop-types';
+import setValidator from '@magento/peregrine/lib/validators/set';
 import defaultClasses from './filterPrice.module.css';
 import 'rc-slider/assets/index.css';
 import './rc-slider.css';
 
 const FilterPrice = props => {
     // VARIABLES (props)
-    const { filterApi, group, items, onApply } = props;
+    const { filterApi, group, items, onApply, filterState } = props;
 
+    console.log('group', group);
+
+    console.log('filterState', filterState);
     const firstPriceItemValue = items[0].value;
     const lastPriceItemValue = items[items.length - 1].value;
 
     const minPrice = Number(firstPriceItemValue.split('_')[0]);
     const maxPrice = Number(lastPriceItemValue.split('_')[1]);
 
-    const { toggleItem } = filterApi;
+    const { toggleItem, removeItem } = filterApi;
 
     // STATE HOOKS
     const [priceRange, setPriceRange] = useState({
-        min: 0,
-        max: 0
+        min: minPrice,
+        max: maxPrice
     });
 
     // FUNCTIONS
@@ -68,7 +72,9 @@ const FilterPrice = props => {
             value: `${correctedPriceRange.min}_${correctedPriceRange.max}`
         };
 
+        removeItem(group);
         toggleItem({ group, item });
+        // setItems({ group, item });
 
         if (typeof onApply === 'function') {
             onApply(group, item);
@@ -111,7 +117,8 @@ FilterPrice.propTypes = {
     filterApi: shape({}).isRequired,
     group: string,
     items: array,
-    onApply: func
+    onApply: func,
+    filterState: setValidator
 };
 
 export default FilterPrice;

@@ -72,6 +72,7 @@ const FilterBlock = props => {
                 group={group}
                 items={items}
                 onApply={onApply}
+                filterState={filterState}
             />
         ) : name === 'Fashion Color' ? (
             <FilterColor

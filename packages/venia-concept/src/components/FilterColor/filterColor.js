@@ -1,10 +1,12 @@
 import React, { Fragment, useMemo } from 'react';
 import { useFilterList } from '@magento/peregrine/lib/talons/FilterModal';
 import { useStyle } from '@magento/venia-ui/lib/classify';
-import { useIntl } from 'react-intl';
+// import { useIntl } from 'react-intl';
 import defaultClasses from '@magento/venia-ui/lib/components/FilterModal/FilterList/filterList.module.css';
+import setValidator from '@magento/peregrine/lib/validators/set';
 import FilterColorItem from './filterColorItem';
 import customClasses from './filterColor.module.css';
+import { array, func, shape, string } from 'prop-types';
 
 const labels = new WeakMap();
 
@@ -19,8 +21,11 @@ const FilterColor = props => {
     } = props;
     const classes = useStyle(defaultClasses, props.classes, customClasses);
     const talonProps = useFilterList({ filterState, items, itemCountToShow });
-    const { isListExpanded, handleListToggle } = talonProps;
-    const { formatMessage } = useIntl();
+    const {
+        isListExpanded
+        // handleListToggle
+    } = talonProps;
+    // const { formatMessage } = useIntl();
 
     // memoize item creation
     // search value is not referenced, so this array is stable
@@ -69,40 +74,40 @@ const FilterColor = props => {
         ]
     );
 
-    const showMoreLessItem = useMemo(() => {
-        if (items.length <= itemCountToShow) {
-            return null;
-        }
+    // const showMoreLessItem = useMemo(() => {
+    //     if (items.length <= itemCountToShow) {
+    //         return null;
+    //     }
 
-        const label = isListExpanded
-            ? formatMessage({
-                  id: 'filterList.showLess',
-                  defaultMessage: 'Show Less'
-              })
-            : formatMessage({
-                  id: 'filterList.showMore',
-                  defaultMessage: 'Show More'
-              });
+    //     const label = isListExpanded
+    //         ? formatMessage({
+    //               id: 'filterList.showLess',
+    //               defaultMessage: 'Show Less'
+    //           })
+    //         : formatMessage({
+    //               id: 'filterList.showMore',
+    //               defaultMessage: 'Show More'
+    //           });
 
-        return (
-            <li className={classes.showMoreLessItem}>
-                <button
-                    onClick={handleListToggle}
-                    className={classes.showMoreLessButton}
-                    data-cy="FilterList-showMoreLessButton"
-                >
-                    {label}
-                </button>
-            </li>
-        );
-    }, [
-        isListExpanded,
-        handleListToggle,
-        items,
-        itemCountToShow,
-        formatMessage,
-        classes
-    ]);
+    //     return (
+    //         <li className={classes.showMoreLessItem}>
+    //             <button
+    //                 onClick={handleListToggle}
+    //                 className={classes.showMoreLessButton}
+    //                 data-cy="FilterList-showMoreLessButton"
+    //             >
+    //                 {label}
+    //             </button>
+    //         </li>
+    //     );
+    // }, [
+    //     isListExpanded,
+    //     handleListToggle,
+    //     items,
+    //     itemCountToShow,
+    //     formatMessage,
+    //     classes
+    // ]);
 
     return (
         <Fragment>
@@ -112,6 +117,14 @@ const FilterColor = props => {
             </ul>
         </Fragment>
     );
+};
+
+FilterColor.propTypes = {
+    filterApi: shape({}),
+    filterState: setValidator,
+    group: string,
+    items: array,
+    onApply: func
 };
 
 export default FilterColor;

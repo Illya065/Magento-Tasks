@@ -120,7 +120,8 @@ const CategoryContent = props => {
     const infiniteScrollModified = Object.values(infiniteItems)
         .flat(1)
         .filter(i => i);
-    console.log('infiniteItems', infiniteScrollModified, items);
+
+    console.log('in', talonProps);
 
     const shouldShowFilterButtons = filters && filters.length;
     const shouldShowFilterShimmer = filters === null;
