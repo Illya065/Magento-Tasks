@@ -42,17 +42,24 @@ const reducer = (state, action) => {
             const nextState = new Map(state);
             const nextSet = new Set(state.get(group));
 
-            if (nextSet.has(item)) {
-                nextSet.delete(item);
-            } else {
+            if (group === 'price') {
+                nextSet.clear();
                 nextSet.add(item);
-            }
 
-            // if removing an item leaves a group empty, delete that group
-            if (nextSet.size) {
                 nextState.set(group, nextSet);
             } else {
-                nextState.delete(group);
+                if (nextSet.has(item)) {
+                    nextSet.delete(item);
+                } else {
+                    nextSet.add(item);
+                }
+
+                // if removing an item leaves a group empty, delete that group
+                if (nextSet.size) {
+                    nextState.set(group, nextSet);
+                } else {
+                    nextState.delete(group);
+                }
             }
 
             return nextState;

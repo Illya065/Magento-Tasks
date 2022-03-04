@@ -121,8 +121,6 @@ const CategoryContent = props => {
         .flat(1)
         .filter(i => i);
 
-    console.log('in', talonProps);
-
     const shouldShowFilterButtons = filters && filters.length;
     const shouldShowFilterShimmer = filters === null;
 

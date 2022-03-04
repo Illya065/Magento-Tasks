@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Range } from 'rc-slider';
 import { array, func, shape, string } from 'prop-types';
 import setValidator from '@magento/peregrine/lib/validators/set';
@@ -11,9 +11,10 @@ const FilterPrice = props => {
     // VARIABLES (props)
     const { filterApi, group, items, onApply, filterState } = props;
 
-    console.log('group', group);
+    if (filterState) {
+        console.log('filterState', Array.from(filterState)[0]);
+    }
 
-    console.log('filterState', filterState);
     const firstPriceItemValue = items[0].value;
     const lastPriceItemValue = items[items.length - 1].value;
 
@@ -27,6 +28,25 @@ const FilterPrice = props => {
         min: minPrice,
         max: maxPrice
     });
+
+    // EFFECT HOOKS
+    useEffect(() => {
+        if (filterState) {
+            const filterMinPrice = Number(
+                Array.from(filterState)[0].value.split('_')[0]
+            );
+            const filterMaxPrice = Number(
+                Array.from(filterState)[0].value.split('_')[1]
+            );
+
+            const rangeSliderValueObject = {
+                min: filterMinPrice,
+                max: filterMaxPrice
+            };
+            setPriceRange(rangeSliderValueObject);
+            console.log('filterPrice', filterMinPrice, filterMaxPrice);
+        }
+    }, []);
 
     // FUNCTIONS
     const rangeSliderValueChangeHandler = value => {

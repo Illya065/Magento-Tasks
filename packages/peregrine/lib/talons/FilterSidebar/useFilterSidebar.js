@@ -183,7 +183,6 @@ export const useFilterSidebar = props => {
 
     useEffect(() => {
         const nextState = getStateFromSearch(search, filterKeys, filterItems);
-        console.log('nextState', nextState);
         filterApi.setItems(nextState);
     }, [filterApi, filterItems, filterKeys, search]);
 

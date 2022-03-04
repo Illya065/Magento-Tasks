@@ -80,7 +80,6 @@ export const useCategoryContent = props => {
     }, [categoryId, getSortMethods]);
 
     const filters = filterData ? filterData.products.aggregations : null;
-    console.log('filters', filters);
     const items = data ? data.products.items : placeholderItems;
     const totalPagesFromData = data
         ? data.products.page_info.total_pages

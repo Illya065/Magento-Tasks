@@ -47,17 +47,31 @@ export const getStateFromSearch = (initialValue, filterKeys, filterItems) => {
             }
 
             // map item values to items
-            for (const value of params.getAll(key)) {
-                const existingFilter = groupItemsByValue.get(
-                    getValueFromFilterString(value)
-                );
+            if (group === 'price') {
+                for (const value of params.getAll(key)) {
+                    items.clear();
+                    const existingFilter = {
+                        title: getTitleFromFilterString(value),
+                        value: getValueFromFilterString(value)
+                    };
 
-                if (existingFilter) {
-                    items.add(existingFilter);
-                } else {
-                    console.warn(
-                        `Existing filter ${value} not found in possible filters`
+                    if (existingFilter) {
+                        items.add(existingFilter);
+                    }
+                }
+            } else {
+                for (const value of params.getAll(key)) {
+                    const existingFilter = groupItemsByValue.get(
+                        getValueFromFilterString(value)
                     );
+
+                    if (existingFilter) {
+                        items.add(existingFilter);
+                    } else {
+                        console.warn(
+                            `Existing filter ${value} not found in possible filters`
+                        );
+                    }
                 }
             }
 
@@ -138,6 +152,9 @@ export const stripHtml = html => html.replace(/(<([^>]+)>)/gi, '');
 /** GetFilterInput helpers below. */
 const getValueFromFilterString = keyValueString =>
     keyValueString.split(DELIMITER)[1];
+
+const getTitleFromFilterString = keyValueString =>
+    keyValueString.split(DELIMITER)[0];
 
 /**
  * Converts a set of values to a range filter
