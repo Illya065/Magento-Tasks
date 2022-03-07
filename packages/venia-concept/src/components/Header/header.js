@@ -3,7 +3,6 @@ import React, { Fragment, Suspense, useEffect, useRef } from 'react';
 import { shape, string } from 'prop-types';
 import { Link, Route } from 'react-router-dom';
 
-import Logo from '../Logo';
 import AccountTrigger from '@magento/venia-ui/lib/components/Header/accountTrigger';
 import CartTrigger from '@magento/venia-ui/lib/components/Header/cartTrigger';
 import NavTrigger from '@magento/venia-ui/lib/components/Header/navTrigger';
@@ -11,41 +10,52 @@ import SearchTrigger from '@magento/venia-ui/lib/components/Header/searchTrigger
 import OnlineIndicator from '@magento/venia-ui/lib/components/Header/onlineIndicator';
 import { useHeader } from '@magento/peregrine/lib/talons/Header/useHeader';
 import resourceUrl from '@magento/peregrine/lib/util/makeUrl';
-import customClasses from './header.module.css';
 import StoreSwitcher from '@magento/venia-ui/lib/components/Header/storeSwitcher';
 import CurrencySwitcher from '@magento/venia-ui/lib/components/Header/currencySwitcher';
-import MegaMenu from '../MegaMenu';
 import PageLoadingIndicator from '@magento/venia-ui/lib/components/PageLoadingIndicator';
 import { useStyle } from '@magento/venia-ui/lib/classify';
+
+import customClasses from './header.module.css';
+import MegaMenu from '../MegaMenu';
+import Logo from '../Logo';
 
 const SearchBar = React.lazy(() =>
     import('@magento/venia-ui/lib/components/SearchBar')
 );
 
 const Header = props => {
+    // REFS
     const headerRef = useRef(null);
+
+    // VARIABLES
     const options = {
         root: null,
         rootMargin: '0px',
         threshold: 0
     };
 
+    // FUNCTIONS
     const callback = function(entries) {
-        if (entries[0].isIntersecting) {
-            headerRef.current.style.position = 'relative';
-            headerRef.current.style.backgroundColor = 'rgb(255,255,255)';
-        } else {
-            headerRef.current.style.position = 'sticky';
-            headerRef.current.style.backgroundColor = 'rgba(255,255,255, 0.95)';
+        if (headerRef.current) {
+            if (entries[0].isIntersecting) {
+                headerRef.current.style.position = 'relative';
+                headerRef.current.style.backgroundColor = 'rgb(255,255,255)';
+            } else {
+                headerRef.current.style.position = 'sticky';
+                headerRef.current.style.backgroundColor =
+                    'rgba(255,255,255, 0.95)';
+            }
         }
     };
 
     const observer = new IntersectionObserver(callback, options);
 
+    // EFFECT HOOKS
     useEffect(() => {
         observer.observe(document.querySelector('.my-header'));
     }, []);
 
+    // CUSTOM HOOKS
     const {
         handleSearchTriggerClick,
         hasBeenOffline,
@@ -54,10 +64,11 @@ const Header = props => {
         searchRef,
         searchTriggerRef
     } = useHeader();
-
     const classes = useStyle(props.classes, customClasses);
+
     const rootClass = isSearchOpen ? classes.open : classes.closed;
 
+    // COMPONENTS
     const searchBarFallback = (
         <div className={classes.searchFallback} ref={searchRef}>
             <div className={classes.input}>
