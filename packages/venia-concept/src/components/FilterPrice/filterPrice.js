@@ -1,8 +1,13 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { Range } from 'rc-slider';
 import { array, func, shape, string } from 'prop-types';
+
 import setValidator from '@magento/peregrine/lib/validators/set';
+
+import ResetIcon from '../../../assets/ResetIcon.png';
 import defaultClasses from './filterPrice.module.css';
 import 'rc-slider/assets/index.css';
 import './rc-slider.css';
@@ -10,10 +15,6 @@ import './rc-slider.css';
 const FilterPrice = props => {
     // VARIABLES (props)
     const { filterApi, group, items, onApply, filterState } = props;
-
-    if (filterState) {
-        console.log('filterState', Array.from(filterState)[0]);
-    }
 
     const firstPriceItemValue = items[0].value;
     const lastPriceItemValue = items[items.length - 1].value;
@@ -31,6 +32,7 @@ const FilterPrice = props => {
 
     // EFFECT HOOKS
     useEffect(() => {
+        // on reload page set price range (local state)
         if (filterState) {
             const filterMinPrice = Number(
                 Array.from(filterState)[0].value.split('_')[0]
@@ -44,7 +46,6 @@ const FilterPrice = props => {
                 max: filterMaxPrice
             };
             setPriceRange(rangeSliderValueObject);
-            console.log('filterPrice', filterMinPrice, filterMaxPrice);
         }
     }, []);
 
@@ -94,11 +95,31 @@ const FilterPrice = props => {
 
         removeItem(group);
         toggleItem({ group, item });
-        // setItems({ group, item });
 
         if (typeof onApply === 'function') {
             onApply(group, item);
         }
+    };
+
+    const handleEnterPress = event => {
+        if (event.keyCode === 13) {
+            event.target.blur();
+        }
+    };
+
+    const resetPriceFilter = () => {
+        const item = {
+            title: `${minPrice}-${maxPrice}`,
+            value: `${minPrice}_${maxPrice}`
+        };
+        toggleItem({ group, item });
+
+        onApply(group, item);
+
+        setPriceRange({
+            min: minPrice,
+            max: maxPrice
+        });
     };
 
     return (
@@ -111,6 +132,7 @@ const FilterPrice = props => {
                     value={priceRange.min}
                     id="less-price-value"
                     onBlur={applyPriceFilter}
+                    onKeyDown={handleEnterPress}
                 />
                 <input
                     onChange={inputPriceValueChangeHandler}
@@ -119,7 +141,18 @@ const FilterPrice = props => {
                     value={priceRange.max}
                     id="greater-price-value"
                     onBlur={applyPriceFilter}
+                    onKeyDown={handleEnterPress}
                 />
+                <div
+                    onClick={resetPriceFilter}
+                    className={defaultClasses.refreshIconWrapper}
+                >
+                    <img
+                        src={ResetIcon}
+                        alt=""
+                        className={defaultClasses.refreshIcon}
+                    />
+                </div>
             </div>
 
             <Range

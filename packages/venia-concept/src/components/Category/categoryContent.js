@@ -5,25 +5,22 @@ import React, {
     Fragment,
     Suspense,
     useEffect,
-    // useEffect,
     useMemo,
     useRef,
     useState
 } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { array, number, shape, string } from 'prop-types';
 
 import { useIsInViewport } from '@magento/peregrine/lib/hooks/useIsInViewport';
 import { useCategoryContent } from '@magento/peregrine/lib/talons/RootComponents/Category';
-
 import Breadcrumbs from '@magento/venia-ui/lib/components/Breadcrumbs';
 import FilterModalOpenButton, {
     FilterModalOpenButtonShimmer
 } from '@magento/venia-ui/lib/components/FilterModalOpenButton';
 import { FilterSidebarShimmer } from '@magento/venia-ui/lib/components/FilterSidebar';
-import Gallery from '../Gallery';
 import { StoreTitle } from '@magento/venia-ui/lib/components/Head';
-import Pagination from '../Pagination';
 import ProductSort, {
     ProductSortShimmer
 } from '@magento/venia-ui/lib/components/ProductSort';
@@ -33,13 +30,15 @@ import SortedByContainer, {
     SortedByContainerShimmer
 } from '@magento/venia-ui/lib/components/SortedByContainer';
 import defaultClasses from '@magento/venia-ui/lib/RootComponents/Category/category.module.css';
-import customClasses from './categoryContent.module.css';
 import NoProductsFound from '@magento/venia-ui/lib/RootComponents/Category/NoProductsFound';
 import { useStyle } from '@magento/venia-ui/lib/classify';
-import { ContentViewProvider } from './contentViewContext';
-import { useHistory, useLocation } from 'react-router-dom';
 import { useMegaMenu } from '@magento/peregrine/lib/talons/MegaMenu/useMegaMenu';
+
+import Pagination from '../Pagination';
+import customClasses from './categoryContent.module.css';
+import { ContentViewProvider } from './contentViewContext';
 import CategoryList from './categoryList';
+import Gallery from '../Gallery';
 
 const FilterModal = React.lazy(() => import('../FilterModal'));
 const FilterSidebar = React.lazy(() => import('../FilterSidebar'));
@@ -282,7 +281,7 @@ const CategoryContent = props => {
                             >
                                 {categoryResultsHeading}
                                 <CategoryList
-                                    urlList={urlList}
+                                    categoryUrlList={urlList}
                                     filters={filters}
                                 />
                             </div>
@@ -317,9 +316,6 @@ CategoryContent.propTypes = {
         categoryInfo: string,
         headerButtons: string
     }),
-    // sortProps contains the following structure:
-    // [{sortDirection: string, sortAttribute: string, sortText: string},
-    // React.Dispatch<React.SetStateAction<{sortDirection: string, sortAttribute: string, sortText: string}]
     sortProps: array,
     pageSize: number
 };

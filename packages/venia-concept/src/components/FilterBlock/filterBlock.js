@@ -6,15 +6,16 @@ import { Form } from 'informed';
 
 import { useFilterBlock } from '@magento/peregrine/lib/talons/FilterModal';
 import setValidator from '@magento/peregrine/lib/validators/set';
-
 import Icon from '@magento/venia-ui/lib/components/Icon';
 import FilterList from '@magento/venia-ui/lib/components/FilterModal/FilterList';
 import defaultClasses from '@magento/venia-ui/lib/components/FilterModal/filterBlock.module.css';
 import { useStyle } from '@magento/venia-ui/lib/classify';
+
 import FilterPrice from '../FilterPrice';
 import FilterColor from '../FilterColor';
 
 const FilterBlock = props => {
+    // PROPS
     const {
         filterApi,
         filterState,
@@ -25,16 +26,18 @@ const FilterBlock = props => {
         initialOpen
     } = props;
 
+    // CUSTOM HOOKS
     const { formatMessage } = useIntl();
     const talonProps = useFilterBlock({
         filterState,
         items,
         initialOpen
     });
-    const { handleClick, isExpanded } = talonProps;
-    const iconSrc = isExpanded ? ArrowUp : ArrowDown;
     const classes = useStyle(defaultClasses, props.classes);
 
+    // VARIABLES
+    const { handleClick, isExpanded } = talonProps;
+    const iconSrc = isExpanded ? ArrowUp : ArrowDown;
     const itemAriaLabel = formatMessage(
         {
             id: 'filterModal.item.ariaLabel',
@@ -44,7 +47,6 @@ const FilterBlock = props => {
             itemName: name
         }
     );
-
     const toggleItemOptionsAriaLabel = isExpanded
         ? formatMessage(
               {
@@ -65,6 +67,7 @@ const FilterBlock = props => {
               }
           );
 
+    // COMPONENTS
     const listItem =
         name === 'Price' ? (
             <FilterPrice

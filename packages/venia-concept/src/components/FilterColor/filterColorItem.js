@@ -1,19 +1,22 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useCallback } from 'react';
+import { func, object, shape, string } from 'prop-types';
+import setValidator from '@magento/peregrine/lib/validators/set';
+
 import defaultClasses from './filterColorItem.module.css';
 
 const FilterColorItem = props => {
-    // VARIABLES
+    // PROPS
     const { filterApi, filterState, group, item, onApply } = props;
+
+    // VARIABLES
     const { toggleItem } = filterApi;
     const { title } = item;
     const isSelected = filterState && filterState.has(item);
     const hexColor = title.split('_')[0];
 
-    console.log('item', item);
-
-    // FUNCUTIONS
+    // FUNCTIONS
     const handleClick = useCallback(
         e => {
             // use only left click for selection
@@ -28,8 +31,6 @@ const FilterColorItem = props => {
         [group, item, toggleItem, onApply]
     );
 
-    console.log(props);
-
     return (
         <div
             onClick={handleClick}
@@ -40,6 +41,14 @@ const FilterColorItem = props => {
             ].join(' ')}
         />
     );
+};
+
+FilterColorItem.propTypes = {
+    filterApi: shape({}),
+    filterState: setValidator,
+    group: string,
+    item: object,
+    onApply: func
 };
 
 export default FilterColorItem;

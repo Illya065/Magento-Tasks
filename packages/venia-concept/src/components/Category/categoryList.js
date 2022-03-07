@@ -1,16 +1,19 @@
 import React from 'react';
-import { array } from 'prop-types';
-import defaultClasses from './categoryList.module.css';
 import { Link } from 'react-router-dom';
+import { array } from 'prop-types';
 
-function CategoryList({ filters, urlList }) {
-    if (filters && urlList) {
+import defaultClasses from './categoryList.module.css';
+
+function CategoryList({ filters, categoryUrlList }) {
+    if (filters && categoryUrlList) {
+        // get categories list from filters (without url, only name and value)
         const categoryFilter = filters.filter(
             item => item.label === 'Category'
         )[0].options;
 
+        // add url property
         const categoryFilterWithUrl = categoryFilter.map(item => {
-            const url = urlList.filter(
+            const url = categoryUrlList.filter(
                 filterItem => filterItem.name === item.label
             )[0].url;
 
@@ -36,7 +39,7 @@ function CategoryList({ filters, urlList }) {
 
 CategoryList.propTypes = {
     filters: array,
-    urlList: array
+    categoryUrlList: array
 };
 
 export default CategoryList;

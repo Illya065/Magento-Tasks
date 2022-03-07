@@ -1,24 +1,29 @@
 import React, { useMemo, useCallback, useRef } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { array, arrayOf, shape, string, number } from 'prop-types';
-import { useFilterSidebar } from '@magento/peregrine/lib/talons/FilterSidebar';
 
+import { useFilterSidebar } from '@magento/peregrine/lib/talons/FilterSidebar';
 import LinkButton from '@magento/venia-ui/lib/components/LinkButton';
-import CurrentFilters from '../CurrentFilters';
-import FilterBlock from '../FilterBlock';
 import defaultClasses from '@magento/venia-ui/lib/components/FilterSidebar/filterSidebar.module.css';
 import { useStyle } from '@magento/venia-ui/lib/classify';
 
+import CurrentFilters from '../CurrentFilters';
+import FilterBlock from '../FilterBlock';
+
 const SCROLL_OFFSET = 150;
 
-/**
- * A view that displays applicable and applied filters.
- *
- * @param {Object} props.filters - filters to display
- */
 const FilterSidebar = props => {
+    // REFS
+    const filterRef = useRef();
+
+    // PROPS
     const { filters, filterCountToOpen } = props;
+
+    // CUSTOM HOOKS
     const talonProps = useFilterSidebar({ filters });
+    const classes = useStyle(defaultClasses, props.classes);
+
+    // VARIABLES
     const {
         filterApi,
         filterItems,
@@ -28,10 +33,7 @@ const FilterSidebar = props => {
         handleReset
     } = talonProps;
 
-
-    const filterRef = useRef();
-    const classes = useStyle(defaultClasses, props.classes);
-
+    // FUNCTIONS
     const handleApplyFilter = useCallback(
         (...args) => {
             const filterElement = filterRef.current;
@@ -50,6 +52,7 @@ const FilterSidebar = props => {
         [handleApply, filterRef]
     );
 
+    // COMPONENTS
     const filtersList = useMemo(
         () =>
             Array.from(filterItems, ([group, items], iteration) => {

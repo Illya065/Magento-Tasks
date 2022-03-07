@@ -1,16 +1,18 @@
 import React, { Fragment, useMemo } from 'react';
 import { array, shape, string, func, number } from 'prop-types';
 import { useIntl } from 'react-intl';
+
 import setValidator from '@magento/peregrine/lib/validators/set';
 import { useFilterList } from '@magento/peregrine/lib/talons/FilterModal';
-
-import FilterItem from './filterItem';
 import defaultClasses from '@magento/venia-ui/lib/components/FilterModal/FilterList/filterList.module.css';
 import { useStyle } from '@magento/venia-ui/lib/classify';
+
+import FilterItem from './filterItem';
 
 const labels = new WeakMap();
 
 const FilterList = props => {
+    // PROPS
     const {
         filterApi,
         filterState,
@@ -19,13 +21,16 @@ const FilterList = props => {
         items,
         onApply
     } = props;
+
+    // CUSTOM HOOKS
     const classes = useStyle(defaultClasses, props.classes);
     const talonProps = useFilterList({ filterState, items, itemCountToShow });
-    const { isListExpanded, handleListToggle } = talonProps;
     const { formatMessage } = useIntl();
 
-    // memoize item creation
-    // search value is not referenced, so this array is stable
+    // VARIABLES
+    const { isListExpanded, handleListToggle } = talonProps;
+
+    // COMPONENTS
     const itemElements = useMemo(
         () =>
             items.map((item, index) => {

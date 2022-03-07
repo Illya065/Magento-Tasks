@@ -1,16 +1,18 @@
 import React, { Fragment, useMemo } from 'react';
+import { array, func, shape, string } from 'prop-types';
+
 import { useFilterList } from '@magento/peregrine/lib/talons/FilterModal';
 import { useStyle } from '@magento/venia-ui/lib/classify';
-// import { useIntl } from 'react-intl';
 import defaultClasses from '@magento/venia-ui/lib/components/FilterModal/FilterList/filterList.module.css';
 import setValidator from '@magento/peregrine/lib/validators/set';
+
 import FilterColorItem from './filterColorItem';
 import customClasses from './filterColor.module.css';
-import { array, func, shape, string } from 'prop-types';
 
 const labels = new WeakMap();
 
 const FilterColor = props => {
+    // PROPS
     const {
         filterApi,
         filterState,
@@ -19,16 +21,15 @@ const FilterColor = props => {
         items,
         onApply
     } = props;
+
+    // CUSTOM HOOKS
     const classes = useStyle(defaultClasses, props.classes, customClasses);
     const talonProps = useFilterList({ filterState, items, itemCountToShow });
-    const {
-        isListExpanded
-        // handleListToggle
-    } = talonProps;
-    // const { formatMessage } = useIntl();
 
-    // memoize item creation
-    // search value is not referenced, so this array is stable
+    // VARIABLES
+    const { isListExpanded } = talonProps;
+
+    // COMPONENTS
     const itemElements = useMemo(
         () =>
             items.map((item, index) => {
@@ -74,47 +75,9 @@ const FilterColor = props => {
         ]
     );
 
-    // const showMoreLessItem = useMemo(() => {
-    //     if (items.length <= itemCountToShow) {
-    //         return null;
-    //     }
-
-    //     const label = isListExpanded
-    //         ? formatMessage({
-    //               id: 'filterList.showLess',
-    //               defaultMessage: 'Show Less'
-    //           })
-    //         : formatMessage({
-    //               id: 'filterList.showMore',
-    //               defaultMessage: 'Show More'
-    //           });
-
-    //     return (
-    //         <li className={classes.showMoreLessItem}>
-    //             <button
-    //                 onClick={handleListToggle}
-    //                 className={classes.showMoreLessButton}
-    //                 data-cy="FilterList-showMoreLessButton"
-    //             >
-    //                 {label}
-    //             </button>
-    //         </li>
-    //     );
-    // }, [
-    //     isListExpanded,
-    //     handleListToggle,
-    //     items,
-    //     itemCountToShow,
-    //     formatMessage,
-    //     classes
-    // ]);
-
     return (
         <Fragment>
-            <ul className={classes.filterColorList}>
-                {itemElements}
-                {/* {showMoreLessItem} */}
-            </ul>
+            <ul className={classes.filterColorList}>{itemElements}</ul>
         </Fragment>
     );
 };

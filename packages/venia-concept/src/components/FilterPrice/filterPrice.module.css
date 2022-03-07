@@ -14,3 +14,8 @@
     border-radius: 10px;
     margin: 0rem 1rem;
 }
+
+.refreshIconWrapper {
+    margin: 0rem 1rem;
+    cursor: pointer;
+}

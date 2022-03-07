@@ -125,7 +125,10 @@ export const useMegaMenu = (props = {}) => {
     );
 
     const handleClickOutside = e => {
-        if (!props.mainNavRef.current.contains(e.target)) {
+        if (
+            props.mainNavRef.current &&
+            !props.mainNavRef.current.contains(e.target)
+        ) {
             setSubMenuState(false);
             setDisableFocus(true);
         }

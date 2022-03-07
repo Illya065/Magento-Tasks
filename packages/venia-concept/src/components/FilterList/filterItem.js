@@ -1,11 +1,14 @@
 import React, { useCallback, useMemo } from 'react';
 import { func, number, oneOfType, shape, string } from 'prop-types';
-import setValidator from '@magento/peregrine/lib/validators/set';
 
+import setValidator from '@magento/peregrine/lib/validators/set';
 import FilterDefault from '@magento/venia-ui/lib/components/FilterModal/FilterList/filterDefault';
 
 const FilterItem = props => {
+    // PROPS
     const { filterApi, filterState, group, item, onApply } = props;
+
+    // VARIABLES
     const { toggleItem } = filterApi;
     const { title, value } = item;
     const isSelected = filterState && filterState.has(item);
@@ -19,6 +22,7 @@ const FilterItem = props => {
         [title, value]
     );
 
+    // FUNCTIONS
     const handleClick = useCallback(
         e => {
             // use only left click for selection

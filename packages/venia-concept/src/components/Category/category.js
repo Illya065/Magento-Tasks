@@ -1,24 +1,29 @@
 import React, { Fragment } from 'react';
 import { shape, string } from 'prop-types';
-import { useCategory } from '@magento/peregrine/lib/talons/RootComponents/Category';
 
-import CategoryContent from './categoryContent';
+import { useCategory } from '@magento/peregrine/lib/talons/RootComponents/Category';
 import defaultClasses from '@magento/venia-ui/lib/RootComponents/Category/category.module.css';
 import { GET_PAGE_SIZE } from '@magento/venia-ui/lib/RootComponents/Category/category.gql';
 import ErrorView from '@magento/venia-ui/lib/components/ErrorView';
 import { useStyle } from '@magento/venia-ui/lib/classify';
 import { Meta } from '@magento/venia-ui/lib/components/Head';
 
+import CategoryContent from './categoryContent';
+
 const Category = props => {
+    // PROPS
     const { uid } = props;
 
+    // CUSTOM HOOKS
     const talonProps = useCategory({
         id: uid,
         queries: {
             getPageSize: GET_PAGE_SIZE
         }
     });
+    const classes = useStyle(defaultClasses, props.classes);
 
+    // VARIABLES
     const {
         error,
         metaDescription,
@@ -28,8 +33,6 @@ const Category = props => {
         sortProps,
         pageSize
     } = talonProps;
-
-    const classes = useStyle(defaultClasses, props.classes);
 
     if (!categoryData) {
         if (error && pageControl.currentPage === 1) {
