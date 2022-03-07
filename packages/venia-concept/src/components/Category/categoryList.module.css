@@ -1,0 +1,19 @@
+.categoryList {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+    margin-top: 0.8rem;
+}
+
+.categoryListItem {
+    white-space: nowrap;
+    margin-right: 1rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.categoryListItem:hover {
+    text-decoration: none;
+}

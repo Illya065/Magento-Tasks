@@ -47,7 +47,7 @@ const GalleryItem = props => {
         mapProduct,
         url: item.url_key
     });
-
+    
     // VARIABLES
     const { storeConfig } = props;
     const productUrlSuffix = storeConfig && storeConfig.product_url_suffix;

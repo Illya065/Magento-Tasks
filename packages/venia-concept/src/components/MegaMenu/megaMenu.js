@@ -79,7 +79,10 @@ const MegaMenu = props => {
     const mapTitle = 'Map';
 
     const mapItem = (
-        <Link to="map" className={[classes.megaMenuLink, classes.mapItem].join(' ')}>
+        <Link
+            to="map"
+            className={[classes.megaMenuLink, classes.mapItem].join(' ')}
+        >
             {mapTitle}
         </Link>
     );

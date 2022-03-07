@@ -150,6 +150,38 @@ export const useMegaMenu = (props = {}) => {
         }
     }, [findActiveCategory, location.pathname, megaMenuData]);
 
+    let urlList = [];
+    if (megaMenuData && megaMenuData.children) {
+        // pull from mega menu(main menu) name and url to separate array
+        urlList = megaMenuData.children.map(item => {
+            return {
+                name: item.name,
+                url: item.url_path
+            };
+        });
+
+        // pull name add url from mega menu item(submenu) to separate array
+        const urlListChildren = megaMenuData.children
+            .map(item => {
+                const isHasChildren = item.children.length > 0;
+                if (isHasChildren) {
+                    const urlListChildrenItem = item.children.map(childItem => {
+                        return {
+                            name: childItem.name,
+                            url: childItem.url_path
+                        };
+                    });
+                    return urlListChildrenItem;
+                }
+                return null;
+            })
+            .filter(i => i)
+            .flat();
+
+        urlList.push(urlListChildren);
+        urlList = urlList.flat();
+    }
+
     /**
      * Sets next root component to show proper loading effect
      *
@@ -159,6 +191,7 @@ export const useMegaMenu = (props = {}) => {
 
     return {
         megaMenuData,
+        urlList,
         activeCategoryId,
         categoryUrlSuffix,
         handleClickOutside,

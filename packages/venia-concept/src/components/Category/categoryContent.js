@@ -38,11 +38,18 @@ import NoProductsFound from '@magento/venia-ui/lib/RootComponents/Category/NoPro
 import { useStyle } from '@magento/venia-ui/lib/classify';
 import { ContentViewProvider } from './contentViewContext';
 import { useHistory, useLocation } from 'react-router-dom';
+import { useMegaMenu } from '@magento/peregrine/lib/talons/MegaMenu/useMegaMenu';
+import CategoryList from './categoryList';
 
 const FilterModal = React.lazy(() => import('../FilterModal'));
 const FilterSidebar = React.lazy(() => import('../FilterSidebar'));
 
 const CategoryContent = props => {
+    // REFS
+    const mainNavRef = useRef(null);
+    const sidebarRef = useRef(null);
+
+    // PROPS
     const {
         categoryId,
         data,
@@ -51,18 +58,20 @@ const CategoryContent = props => {
         sortProps,
         pageSize
     } = props;
-    const [currentSort] = sortProps;
 
-    const [infiniteItems, setInfiniteItems] = useState({});
-
-    const { currentPage, setPage } = pageControl;
-
+    // CUSTOM HOOKS
+    const { urlList } = useMegaMenu({ mainNavRef });
     const talonProps = useCategoryContent({
         categoryId,
         data,
         pageSize
     });
+    const classes = useStyle(defaultClasses, props.classes, customClasses);
+    const shouldRenderSidebarContent = useIsInViewport({
+        elementRef: sidebarRef
+    });
 
+    // VARIABLES
     const {
         availableSortMethods,
         categoryName,
@@ -72,19 +81,18 @@ const CategoryContent = props => {
         totalCount,
         totalPagesFromData
     } = talonProps;
-
-    const sidebarRef = useRef(null);
-    const classes = useStyle(defaultClasses, props.classes, customClasses);
-    const shouldRenderSidebarContent = useIsInViewport({
-        elementRef: sidebarRef
-    });
-
-    // set content view url query
-    const [view, setView] = useState(localStorage.getItem('view') || 'list');
+    const { currentPage, setPage } = pageControl;
+    const [currentSort] = sortProps;
     const location = useLocation();
     const history = useHistory();
 
+    // STATE HOOKS
+    const [infiniteItems, setInfiniteItems] = useState({});
+    const [view, setView] = useState(localStorage.getItem('view') || 'list');
+
+    // EFFECT HOOKS
     useEffect(() => {
+        // set category content type view (url query)
         const urlParams = new URLSearchParams(location.search);
         if (view === 'list' && !urlParams.get('view')) {
             urlParams.set('view', 'list');
@@ -98,26 +106,21 @@ const CategoryContent = props => {
         }
     }, [view, location.pathname]);
 
-    // infinite scroll
     useEffect(() => {
+        // infinite scroll
         window.scrollTo(0, 0);
         setInfiniteItems({});
         setPage(1);
     }, []);
 
     useEffect(() => {
+        // infinite scroll set content
         const copy = JSON.parse(JSON.stringify(infiniteItems));
         copy[currentPage.toString()] = items;
         setInfiniteItems(copy);
     }, [items, pageControl, currentPage]);
 
-    useEffect(() => {
-        // const urlParams = new URLSearchParams(location.search);
-        // urlParams.delete('page');
-        // history.push(urlParams);
-    }, [currentPage]);
-
-    const infiniteScrollModified = Object.values(infiniteItems)
+    const infiniteScrollArray = Object.values(infiniteItems)
         .flat(1)
         .filter(i => i);
 
@@ -128,6 +131,7 @@ const CategoryContent = props => {
     const shouldShowSortButtons = totalPagesFromData && availableSortMethods;
     const shouldShowSortShimmer = !totalPagesFromData && isLoading;
 
+    // COMPONENTS
     const maybeFilterButtons = shouldShowFilterButtons ? (
         <FilterModalOpenButton filters={filters} />
     ) : shouldShowFilterShimmer ? (
@@ -176,26 +180,14 @@ const CategoryContent = props => {
         <RichContent html={categoryDescription} />
     ) : null;
 
-    const contentViewChangeHandler = (e, view) => {
-        e.preventDefault();
-
-        if (view === 'list') {
-            localStorage.setItem('view', 'list');
-            setView('list');
-        } else {
-            localStorage.setItem('view', 'grid');
-            setView('grid');
-        }
-    };
-
     const content = useMemo(() => {
         if (!totalPagesFromData && !isLoading) {
             return <NoProductsFound categoryId={categoryId} />;
         }
 
         const gallery =
-            totalPagesFromData && infiniteScrollModified[0] !== null ? (
-                <Gallery items={infiniteScrollModified} view={view} />
+            totalPagesFromData && infiniteScrollArray[0] !== null ? (
+                <Gallery items={infiniteScrollArray} view={view} />
             ) : null;
 
         const pagination = totalPagesFromData ? (
@@ -247,6 +239,19 @@ const CategoryContent = props => {
 
     const categoryTitle = categoryName ? categoryName : <Shimmer width={5} />;
 
+    // FUNCTIONS
+    const contentViewChangeHandler = (e, view) => {
+        e.preventDefault();
+
+        if (view === 'list') {
+            localStorage.setItem('view', 'list');
+            setView('list');
+        } else {
+            localStorage.setItem('view', 'grid');
+            setView('grid');
+        }
+    };
+
     return (
         <Fragment>
             <Breadcrumbs categoryId={categoryId} />
@@ -276,6 +281,10 @@ const CategoryContent = props => {
                                 className={classes.categoryInfo}
                             >
                                 {categoryResultsHeading}
+                                <CategoryList
+                                    urlList={urlList}
+                                    filters={filters}
+                                />
                             </div>
                             <div className={classes.headerButtons}>
                                 {maybeFilterButtons}
